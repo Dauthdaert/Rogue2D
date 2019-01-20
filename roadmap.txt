@@ -1,0 +1,46 @@
+-------BASICS-------
+//Add camera constraints so they don't show outside the map unless its impossible
+//Add pathing to ennemies so they chase the player
+//Add procedural generation of monsters at map creation
+//Add procedural generation of monsters after a set number of turns
+//Add entrances and exits to maps
+Add capability to go up and down levels of the dungeon
+
+-------ACTIONS-------
+//Add voluntary resting
+//Add door interaction
+Add vision system so monsters only chase players when they can see em, otherwise wander around
+
+-------COMBAT-------
+Add accuracy
+Add defense while resting?
+Add ranged combat?
+
+-------DIVERSITY-------
+Add more monster types
+
+-------GUI-------
+Add pregame menus
+Add interface for HP (replace bar?)
+Add mouse controls to menus
+
+-------RPG STUFF-------
+Add equipment
+Add stats
+Link stats to combat system
+Add experience and levels
+Add consumables (potions, scrolls?)
+
+-------POLISH-------
+Add music
+Add sound effects
+Add real graphics
+
+-------TRAPS-------
+Add traps
+Add procedural generation of traps at map creation
+
+-------BONUS-------
+Add classes
+Add gold
+Add shops to buy equipment

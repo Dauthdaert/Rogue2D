@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Love2D 11.1" type="Lua">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../Docs/love_111" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
