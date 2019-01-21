@@ -6,6 +6,7 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+local private = {}
 local gen = {}
 
 function gen.generateMap(height, width)
@@ -17,11 +18,34 @@ function gen.generateMap(height, width)
 	--	Astray:new(width/2-1, height/2-1, changeDirectionModifier (1-30), sparsenessModifier (25-70), deadEndRemovalModifier (70-99) ) | RoomGenerator:new(rooms, minWidth, maxWidth, minHeight, maxHeight)
 	local generator = astray.Astray:new(height/2-1, width/2-1, 30, 70, 50, astray.RoomGenerator:new(7, 2, 10, 2, 10) )
 	local dungeon = generator:Generate()
-	return generator:CellToTiles(dungeon)
+	local tiles = generator:CellToTiles(dungeon)
+	tiles = private.generateEntranceExit(tiles)
+
+	return tiles
+end
+
+function private.generateEntranceExit(tileMap)
+	local xPos, yPos
+
+	repeat
+		xPos = love.math.random(#tileMap[1])
+		yPos = love.math.random(#tileMap)
+	until(tileMap[yPos][xPos] == ".")
+
+	tileMap[yPos][xPos] = "u"
+
+	repeat
+		xPos = love.math.random(#tileMap[1])
+		yPos = love.math.random(#tileMap)
+	until(tileMap[yPos][xPos] == ".")
+
+	tileMap[yPos][xPos] = "d"
+
+	return tileMap
 end
 
 function gen.generateActorsForMap(tileMap)
-	local actors
+	local actors = {}
 
 	for i = 1, 10 do
 		table.insert(actors, gen.generateNewActor(tileMap))

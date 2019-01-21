@@ -24,9 +24,15 @@ function InteractAction:checkAlternate(nextXPos, nextYPos)
 		--Target is a door, so open it
 		if targetTile == "|" or targetTile == "-" then
 			alternate = (require("obj/actions/OpenDoorAction"))(self.actor, nextXPos, nextYPos)
-		-- Target is an open door, so close it
+		--Target is an open door, so close it
 		elseif targetTile == "\\" or targetTile == "/" then
 			alternate = (require("obj/actions/CloseDoorAction"))(self.actor, nextXPos, nextYPos)
+		--Target is an up stair, so use it
+		elseif targetTile == "u" then
+			alternate = (require("obj/actions/UseStairAction"))(self.actor, "up")
+		--Target is a down stair, so use it
+		elseif targetTile == "d" then
+			alternate = (require("obj/actions/UseStairAction"))(self.actor, "down")
 		--Rest for anything else
 		else
 			alternate = (require("obj/actions/RestAction"))(self.actor)

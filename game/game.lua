@@ -20,6 +20,8 @@ function Game.getInstance()
 	return instance
 end
 
+--------------------------------------------------------------------------------------------------
+
 function Game:getHero()
 	return self.actors[1]
 end
@@ -28,9 +30,17 @@ function Game:getActors()
 	return self.actors
 end
 
+--------------------------------------------------------------------------------------------------
+
 function Game:resetGame()
 	self.currentActor = 1
 	self.turnsSinceSpawn = 0
+
+	if self.actors then
+		for i = #self.actors, 2, -1 do
+			table.remove(self.actors, i)
+		end
+	end
 end
 
 function Game:loadGame(heroName)
@@ -42,27 +52,35 @@ function Game:loadGame(heroName)
 	Map:getInstance():load(map)
 end
 
+function Game:quit()--save lvl state
+	gameIO.saveGame(Map:getInstance():getTileMap(), self:getActors())
+end
+
+--------------------------------------------------------------------------------------------------
+
 function Game:update()
 	local actor = self.actors[self.currentActor]
-	
-	if (require("obj/actions/Action")).energyCost <= actor.currentEnergy then
-		local action = actor:getAction()
-		if action == nil then return end
 
-		while true do
-			local result = action:execute()
+	if Map:getInstance():actorIsCloseToPlayer(actor) then
+		if (require("obj/actions/Action")).energyCost <= actor.currentEnergy then
+			local action = actor:getAction()
+			if action == nil then return end
 
-			if result.succeeded == false then return end
-			if result.alternate == nil then break end
+			while true do
+				local result = action:execute()
 
-			action = result.alternate
+				if result.succeeded == false then return end
+				if result.alternate == nil then break end
+
+				action = result.alternate
+			end
 		end
+
+		--Add new energy for actions
+		actor:gainEnergy()
 	end
 
-------------After this happens only when an actor executes an action------------
-
-	--Add new energy for actions
-	actor:gainEnergy()
+	--------------------------------------------------------------------------------
 
 	--Spawn new monsters every so often
 	if actor.type == "Hero" then
@@ -83,6 +101,8 @@ function Game:update()
 	end
 end
 
+--------------------------------------------------------------------------------------------------
+
 function Game:addActor(actor)
 	table.insert(self.actors, actor)
 end
@@ -98,31 +118,48 @@ function Game:killActor(actor)
 	end
 end
 
+--------------------------------------------------------------------------------------------------
+
+function Game:generateNewLevel(name)
+	local tileMap = gameGenerator.generateMap(100, 100)
+	local actors = gameGenerator.generateActorsForMap(tileMap)
+
+	gameIO.saveLevel(tileMap, actors, self:getHero().name, name)
+end
+
 function Game:loadNewLevel(nextLevel)
 	local map = Map:getInstance()
-
 	local hero = self:getHero()
 
+	--Save the old map before we change
+	gameIO.saveLevel(map:getTileMap(), self.actors, hero.name, hero.currentLevel)
+
+	self:resetGame()
+
+	--Which position to place the Hero on the next map
 	local goingDown = nextLevel > hero.currentLevel
 
-	hero.currentLevel = nextLevel
-	local tileMap, actors = gameIO.loadLevel()
+	--Load map and new actors
+	local tileMap, actorsTmp = gameIO.loadLevel(hero.name, nextLevel)
 	map:load(tileMap)
+	for key, item in ipairs(actorsTmp) do
+		table.insert(self.actors, item)
+	end
 
+	--Setup new values for Hero
+	hero.currentLevel = nextLevel
 	if goingDown then
 		hero.xPos, hero.yPos = map:getEntrancePos()
 	else
 		hero.xPos, hero.yPos = map:getExitPos()
 	end
-
-	self:resetGame()
 end
 
 function Game:goDown()
 	local hero = self:getHero()
 	local nextLevel = hero.currentLevel + 1
 	--if no level exists, generate new
-	if true then
+	if not gameIO.levelExists(hero.name, nextLevel) then
 		self:generateNewLevel(nextLevel)
 	end
 
@@ -136,15 +173,6 @@ function Game:goUp()
 	self:loadNewLevel(nextLevel)
 end
 
-function Game:generateNewLevel(name)
-	local tileMap = gameGenerator.generateMap(400, 400)
-	local actors = gameGenerator.generateActorsForMap(tileMap)
-
-	gameIO.saveLevel(tileMap, actors)
-end
-
-function Game:quit()--save lvl state
-	gameIO.saveGame(Map:getInstance():getTileMap(), self:getActors())
-end
+--------------------------------------------------------------------------------------------------
 
 return Game

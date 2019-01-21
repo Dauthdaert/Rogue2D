@@ -120,6 +120,8 @@ function Map:getTileMap()
 end
 
 function Map:getTileAtPos(xPos, yPos)
+	if yPos == 0 or xPos == 0 or yPos > #self.tileMap or xPos > #self.tileMap[yPos] then return nil end
+
 	return self.tileMap[yPos][xPos]
 end
 
@@ -140,7 +142,7 @@ function Map:getCollisionMap()
 end
 
 function Map:getCollisionWithTiles(xPos, yPos)
-	if xPos == 0 or yPos == 0 then return true end
+	if yPos == 0 or xPos == 0 or yPos > #self.tileMap or xPos > #self.tileMap[yPos] then return true end
 
 	return self.collisionMap[yPos][xPos] == 1
 end
@@ -177,6 +179,12 @@ function Map:getPathToPlayer(startX, startY)
 	else
 		return startX + love.math.random(-1, 1), startY + love.math.random(-1, 1)
 	end
+end
+
+function Map:actorIsCloseToPlayer(actor)
+	local hero = Game:getInstance():getHero()
+
+	return math.abs(hero.xPos - actor.xPos) < 15 or math.abs(hero.yPos - actor.yPos) < 15
 end
 
 --------------------------------------------------------------------------------------------------
