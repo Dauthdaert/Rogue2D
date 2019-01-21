@@ -6,6 +6,8 @@ local gameGenerator = require("game/generator")
 
 local instance = Game()
 
+local TURNS_TO_SPAWN = 20
+
 function Game.new()
 	error('Cannot instantiate from a Singleton class')
 end
@@ -64,7 +66,7 @@ function Game:update()
 
 	--Spawn new monsters every so often
 	if actor.type == "Hero" then
-		if self.turnsSinceSpawn > 10 then
+		if self.turnsSinceSpawn > TURNS_TO_SPAWN then
 			table.insert(self.actors, gameGenerator.generateNewActor(Map:getInstance():getTileMap()))
 			self.turnsSinceSpawn =  0
 		else
