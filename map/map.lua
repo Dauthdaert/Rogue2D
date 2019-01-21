@@ -7,6 +7,8 @@ local Pathfinder = require ("lib/jumper.pathfinder") -- The pathfinder
 local instance = Map()
 
 local WALKABLE_TILE = 0
+local STAIRS_UP = "u"
+local STAIRS_DOWN = "d"
 
 function Map.new()
 	error('Cannot instantiate from a Singleton class') 
@@ -53,6 +55,12 @@ function Map:load(tiles)
 	self.width = #self.tileMap[1]
 	self.height = #self.tileMap
 
+	self.entrance = {}
+	self.exit = {}
+
+	self.entrance.x, self.entrance.y = self:loadEntranceFromTiles(self.tileMap)
+	self.exit.x, self.exit.y = self:loadExitFromTiles(self.tileMap)
+
 	self.collisionMap = self:loadCollisionMapFromTiles(self.tileMap)
 	self.pathfinder = self:loadPathfinder()
 end
@@ -72,6 +80,28 @@ function Map:loadCollisionMapFromTiles(tileMap)
 	end
 
 	return collisionMap
+end
+
+function Map:loadEntranceFromTiles(tileMap)
+	for row = 1, #tileMap do
+		for col = 1, #tileMap[row] do
+			local c = tileMap[row][col]
+			if c == STAIRS_UP then return col, row end
+		end
+	end
+
+	return 1, 1
+end
+
+function Map:loadExitFromTiles(tileMap)
+	for row = 1, #tileMap do
+		for col = 1, #tileMap[row] do
+			local c = tileMap[row][col]
+			if c == STAIRS_DOWN then return col, row end
+		end
+	end
+
+	return 1, 1
 end
 
 function Map:loadPathfinder()
@@ -121,6 +151,16 @@ function Map:getCollisionWithActors(xPos, yPos)
 	end
 
 	return false
+end
+
+--------------------------------------------------------------------------------------------------
+
+function Map:getEntrancePos()
+	return self.entrance.x, self.entrance.y
+end
+
+function Map:getExitPos()
+	return self.exit.x, self.exit.y
 end
 
 --------------------------------------------------------------------------------------------------

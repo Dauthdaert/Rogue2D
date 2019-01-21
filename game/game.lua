@@ -26,11 +26,15 @@ function Game:getActors()
 	return self.actors
 end
 
-function Game:loadGame(heroName)
+function Game:resetGame()
 	self.currentActor = 1
 	self.turnsSinceSpawn = 0
+end
 
-	local map, actors = gameIO.load(heroName)
+function Game:loadGame(heroName)
+	self:resetGame()
+
+	local map, actors = gameIO.loadGame(heroName)
 
 	self.actors = actors
 	Map:getInstance():load(map)
@@ -92,6 +96,26 @@ function Game:killActor(actor)
 	end
 end
 
+function Game:loadNewLevel(nextLevel)
+	local map = Map:getInstance()
+
+	local hero = self:getHero()
+
+	local goingDown = nextLevel > hero.currentLevel
+
+	hero.currentLevel = nextLevel
+	local tileMap, actors = gameIO.loadLevel()
+	map:load(tileMap)
+
+	if goingDown then
+		hero.xPos, hero.yPos = map:getEntrancePos()
+	else
+		hero.xPos, hero.yPos = map:getExitPos()
+	end
+
+	self:resetGame()
+end
+
 function Game:goDown()
 	local hero = self:getHero()
 	local nextLevel = hero.currentLevel + 1
@@ -99,28 +123,26 @@ function Game:goDown()
 	if true then
 		self:generateNewLevel(nextLevel)
 	end
-	hero.currentLevel = nextLevel
 
-	--self:startGame(hero.name)
+	self:loadNewLevel(nextLevel)
 end
 
 function Game:goUp()
 	local hero = self:getHero()
 	local nextLevel = hero.currentLevel - 1
-	hero.currentLevel = nextLevel
 
-	--self:startGame(hero.name)
+	self:loadNewLevel(nextLevel)
 end
 
 function Game:generateNewLevel(name)
 	local tileMap = gameGenerator.generateMap(400, 400)
 	local actors = gameGenerator.generateActorsForMap(tileMap)
 
-	--gameIO.save(gameIO.getHeroPath(self:getHero().name)..name, tileMap, actors)
+	gameIO.saveLevel(tileMap, actors)
 end
 
 function Game:quit()--save lvl state
-	gameIO.save(Map:getInstance():getTileMap(), self:getActors())
+	gameIO.saveGame(Map:getInstance():getTileMap(), self:getActors())
 end
 
 return Game

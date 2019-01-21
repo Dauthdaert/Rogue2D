@@ -20,6 +20,11 @@ function private.getLevelPath(hero)
 	return "saves/"..hero.name.."/"..hero.currentLevel.."/"
 end
 
+function private.loadHero(heroName)
+	local data = encoding.decode(love.filesystem.read(private.getHeroPath(heroName).."stats.txt"))
+	return require("obj/Hero")(data[1], tonumber(data[2]), tonumber(data[3]), tonumber(data[4]), tonumber(data[5]))
+end
+
 function private.loadActor(actorString)
 	local data = encoding.decode(actorString)
 	local actor = require("obj/"..data[1])(tonumber(data[2]), tonumber(data[3]), tonumber(data[4]))
@@ -29,9 +34,8 @@ end
 function private.loadActors(heroName)
 	local actors = {}
 
-	--Load the Hero
-	local data = encoding.decode(love.filesystem.read(private.getHeroPath(heroName).."stats.txt"))
-	table.insert(actors, require("obj/Hero")(data[1], tonumber(data[2]), tonumber(data[3]), tonumber(data[4]), tonumber(data[5])))
+	--Load Hero
+	table.insert(actors, private.loadHero(heroName))
 
 	--Load the rest
 	for line in love.filesystem.lines(private.getLevelPath(actors[1]).."meta.txt") do
@@ -59,11 +63,23 @@ function private.loadMap(path)
 	return tileMap
 end
 
-function io.load(heroName)
+function io.loadGame(heroName)
 	local actors = private.loadActors(heroName)
 	local map = private.loadMap(private.getLevelPath(actors[1]).."map.txt")
 
 	return map, actors
+end
+
+function io.loadLevel(heroName)
+	local actors = private.loadActors(heroName)
+	local map = private.loadMap(private.getLevelPath(actors[1]).."map.txt")
+
+	return map, actors
+end
+
+function private.saveHero(hero)
+	local heroString = encoding.encodeHero(hero)
+	love.filesystem.write(private.getHeroPath(hero.name).."stats.txt", heroString)
 end
 
 function private.saveActor(actor, path)
@@ -72,11 +88,6 @@ function private.saveActor(actor, path)
 end
 
 function private.saveActors(actors)
-	--Save the Hero
-	local heroString = encoding.encodeHero(actors[1])
-	love.filesystem.write(private.getHeroPath(actors[1].name).."stats.txt", heroString)
-
-	--Save the rest
 	local path = private.getLevelPath(actors[1]).."meta.txt"
 	love.filesystem.write(path, "")
 	for i=2, #actors do
@@ -97,7 +108,13 @@ function private.saveMap(tiles, path)
 	end
 end
 
-function io.save(map, actors)
+function io.saveGame(map, actors)
+	private.saveHero(actors[1])
+	private.saveActors(actors)
+	private.saveMap(map, private.getLevelPath(actors[1]))
+end
+
+function io.saveLevel(map, actors)
 	private.saveActors(actors)
 	private.saveMap(map, private.getLevelPath(actors[1]))
 end

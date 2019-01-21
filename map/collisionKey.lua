@@ -6,24 +6,27 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+local WALKABLE = 0
+local UNWALKABLE = 1
+
 local collisionKey = {}
 
 --Wall
-collisionKey["#"] = 1
+collisionKey["#"] = UNWALKABLE
 
 --Floor
-collisionKey["."] = 0
+collisionKey["."] = WALKABLE
 
 --Doors (Closed)
-collisionKey["|"] = 1
-collisionKey["-"] = 1
+collisionKey["|"] = UNWALKABLE
+collisionKey["-"] = UNWALKABLE
 
 --Doors (Open)
-collisionKey["/"] = 0
-collisionKey["\\"] = 0
+collisionKey["/"] = WALKABLE
+collisionKey["\\"] = WALKABLE
 
 --Stairs
-collisionKey["u"] = 0
-collisionKey["d"] = 0
+collisionKey["u"] = WALKABLE
+collisionKey["d"] = WALKABLE
 
 return collisionKey

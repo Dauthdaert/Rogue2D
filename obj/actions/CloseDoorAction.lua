@@ -22,8 +22,6 @@ function CloseDoorAction:execute()
 
 	local targetTile = map:getTileAtPos(self.xPos, self.yPos)
 
-	print(targetTile)
-
 	if targetTile == "\\" then
 		map:getTileMap()[self.yPos][self.xPos] = "-"
 	else

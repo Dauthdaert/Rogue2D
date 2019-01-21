@@ -13,7 +13,6 @@ end
 
 function Actor:getAction()
 	local destX, destY = Map:getInstance():getPathToPlayer(self.xPos, self.yPos)
-	print(destX, destY)
 	local direction = "up"
 
 	if destX > self.xPos then
