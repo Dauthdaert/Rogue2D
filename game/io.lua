@@ -31,14 +31,15 @@ function private.loadActor(actorString)
 	return actor
 end
 
-function private.loadActors(heroName)
+function private.loadActors(heroName, path)
 	local actors = {}
+	path = path or private.getLevelPath(actors[1])
 
 	--Load Hero
 	table.insert(actors, private.loadHero(heroName))
 
 	--Load the rest
-	for line in love.filesystem.lines(private.getLevelPath(actors[1]).."meta.txt") do
+	for line in love.filesystem.lines(path.."meta.txt") do
 		table.insert(actors, private.loadActor(line))
 	end
 
@@ -87,8 +88,9 @@ function private.saveActor(actor, path)
 	love.filesystem.append(path, actorString.."\n")
 end
 
-function private.saveActors(actors)
-	local path = private.getLevelPath(actors[1]).."meta.txt"
+function private.saveActors(actors, path)
+	path = path or private.getLevelPath(actors[1]).."meta.txt"
+
 	love.filesystem.write(path, "")
 	for i=2, #actors do
 		private.saveActor(actors[i], path)
