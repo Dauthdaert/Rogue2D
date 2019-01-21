@@ -13,7 +13,7 @@ Add player death
 Add vision system so monsters only chase players when they can see em, otherwise wander around
 
 -------GUI-------
-Add pregame menus
+Add pregame menus (Create a Hero, Generate first level)
 Add interface for HP (replace bar?)
 Add mouse controls to menus
 
