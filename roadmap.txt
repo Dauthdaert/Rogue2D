@@ -5,6 +5,7 @@
 //Add procedural generation of monsters after a set number of turns
 //Add entrances and exits to maps
 Add capability to go up and down levels of the dungeon
+Add player death
 
 -------ACTIONS-------
 //Add voluntary resting
