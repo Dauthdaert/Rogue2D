@@ -27,7 +27,7 @@ function OpenDoorAction:execute()
 	else
 		map:getTileMap()[self.yPos][self.xPos] = "/"
 	end
-	map:getCollisionMap()[self.yPos][self.xPos] = 1
+	map:getCollisionMap()[self.yPos][self.xPos] = 0
 
 	OpenDoorAction.super.execute(self) --does energy cost
 

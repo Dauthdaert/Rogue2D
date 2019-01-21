@@ -11,6 +11,7 @@ function Hero:init(name, currentLevel, xPos, yPos, hp)
 	Hero.super.init(self, "Hero", xPos, yPos, EnergyPerTurn, MaxHp, hp, Damage)
 
 	self.currentLevel, self.name, self.action = currentLevel or "example", name or "test", nil
+	self.facing = "up"
 end
 
 function Hero:setAction(action)

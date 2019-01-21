@@ -22,12 +22,14 @@ function CloseDoorAction:execute()
 
 	local targetTile = map:getTileAtPos(self.xPos, self.yPos)
 
+	print(targetTile)
+
 	if targetTile == "\\" then
 		map:getTileMap()[self.yPos][self.xPos] = "-"
 	else
 		map:getTileMap()[self.yPos][self.xPos] = "|"
 	end
-	map:getCollisionMap()[self.yPos][self.xPos] = 0
+	map:getCollisionMap()[self.yPos][self.xPos] = 1
 
 	CloseDoorAction.super.execute(self) --does energy cost
 

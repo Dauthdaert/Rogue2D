@@ -6,7 +6,6 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-
 local input = {}
 input.actions = {}
 
@@ -28,6 +27,16 @@ end
 
 function input.keypressed(hero, key, isrepeat)
 	hero:setAction(input.actions[key])
+
+	if key == "w" then
+		hero.facing = "up"
+	elseif key == "s" then
+		hero.facing= "down"
+	elseif key == "d" then
+		hero.facing = "right"
+	elseif key == "a" then
+		hero.facing = "left"
+	end
 end
 
 return input

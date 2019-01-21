@@ -18,18 +18,16 @@ function InteractAction:checkAlternate(nextXPos, nextYPos)
 	local map = Map.getInstance()
 	local alternate
 
-	if map:getCollisionWithTiles(nextXPos, nextYPos) then
-		local targetTile = map:getTileAtPos(nextXPos, nextYPos)
+	local targetTile = map:getTileAtPos(nextXPos, nextYPos)
 
-		print(self.actor.facing)
-
-		--Taget is a door, so open it
+	if targetTile then
+		--Target is a door, so open it
 		if targetTile == "|" or targetTile == "-" then
 			alternate = (require("obj/actions/OpenDoorAction"))(self.actor, nextXPos, nextYPos)
-		--Target is an open door, so close it
+		-- Target is an open door, so close it
 		elseif targetTile == "\\" or targetTile == "/" then
 			alternate = (require("obj/actions/CloseDoorAction"))(self.actor, nextXPos, nextYPos)
-		--Target is anything else, so rest
+		--Rest for anything else
 		else
 			alternate = (require("obj/actions/RestAction"))(self.actor)
 		end

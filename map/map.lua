@@ -134,6 +134,8 @@ function Map:getPathToPlayer(startX, startY)
 		for node, index in path:nodes() do
 			if index == 2 then return node.x, node.y end
 		end
+	else
+		return startX + love.math.random(-1, 1), startY + love.math.random(-1, 1)
 	end
 end
 

@@ -9,13 +9,12 @@ function Actor:init(type, xPos, yPos, energyPerTurn, maxHp, hp, damage)
 	self.maxHp, self.hp = maxHp or 100, hp or 100
 	self.damage = damage or 0
 	self.speed = 1
-	self.facing = "up"
 end
 
 function Actor:getAction()
 	local destX, destY = Map:getInstance():getPathToPlayer(self.xPos, self.yPos)
-
-	local direction
+	print(destX, destY)
+	local direction = "up"
 
 	if destX > self.xPos then
 		direction = "right"

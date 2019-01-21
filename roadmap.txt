@@ -11,6 +11,11 @@ Add capability to go up and down levels of the dungeon
 //Add door interaction
 Add vision system so monsters only chase players when they can see em, otherwise wander around
 
+-------GUI-------
+Add pregame menus
+Add interface for HP (replace bar?)
+Add mouse controls to menus
+
 -------COMBAT-------
 Add accuracy
 Add defense while resting?
@@ -18,11 +23,6 @@ Add ranged combat?
 
 -------DIVERSITY-------
 Add more monster types
-
--------GUI-------
-Add pregame menus
-Add interface for HP (replace bar?)
-Add mouse controls to menus
 
 -------RPG STUFF-------
 Add equipment

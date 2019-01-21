@@ -48,11 +48,6 @@ function WalkAction:execute()
 	self.actor.xPos = nextXPos
 	self.actor.yPos = nextYPos
 
-	--print(self.actor.facing)
-	--print(self.direction)
-	self.actor.facing = self.direction
-	--print(self.actor.facing)
-
 	return ActionResult
 end
 
