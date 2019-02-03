@@ -14,6 +14,25 @@ function InteractAction:init(actor)
 	InteractAction.super.init(self, actor)
 end
 
+function InteractAction:checkForStairs(xPos, yPos)
+	local map = Map.getInstance()
+	local alternate
+
+	local targetTile = map:getTileAtPos(xPos, yPos)
+
+	if targetTile then
+		--Target is an up stair, so use it
+		if targetTile == "u" then
+			alternate = (require("obj/actions/UseStairAction"))(self.actor, "up")
+			--Target is a down stair, so use it
+		elseif targetTile == "d" then
+			alternate = (require("obj/actions/UseStairAction"))(self.actor, "down")
+		end
+	end
+
+	return alternate
+end
+
 function InteractAction:checkAlternate(nextXPos, nextYPos)
 	local map = Map.getInstance()
 	local alternate
@@ -27,12 +46,6 @@ function InteractAction:checkAlternate(nextXPos, nextYPos)
 		--Target is an open door, so close it
 		elseif targetTile == "\\" or targetTile == "/" then
 			alternate = (require("obj/actions/CloseDoorAction"))(self.actor, nextXPos, nextYPos)
-		--Target is an up stair, so use it
-		elseif targetTile == "u" then
-			alternate = (require("obj/actions/UseStairAction"))(self.actor, "up")
-		--Target is a down stair, so use it
-		elseif targetTile == "d" then
-			alternate = (require("obj/actions/UseStairAction"))(self.actor, "down")
 		--Rest for anything else
 		else
 			alternate = (require("obj/actions/RestAction"))(self.actor)
@@ -53,9 +66,14 @@ function InteractAction:execute()
 
 	local ActionResult = (require("obj/actions/ActionResult"))()
 
-	local nextXPos, nextYPos = navigate.getNextPos(self.actor, self.actor.facing)
+	ActionResult.alternate = self:checkForStairs(self.actor.xPos, self.actor.yPos)
 
-	ActionResult.alternate = self:checkAlternate(nextXPos, nextYPos)
+	if not ActionResult.alternate then
+		local nextXPos, nextYPos = navigate.getNextPos(self.actor, self.actor.facing)
+
+		ActionResult.alternate = self:checkAlternate(nextXPos, nextYPos)
+	end
+
 	if ActionResult.alternate then
 		return ActionResult
 	else

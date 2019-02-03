@@ -28,8 +28,6 @@ function UI:drawDebug()
 	love.graphics.setColor(1, 1, 1)
 end
 
-
-
 function UI:draw()
 	local game = Game.getInstance()
 	local map = Map.getInstance()
