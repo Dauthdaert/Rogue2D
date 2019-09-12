@@ -2,13 +2,13 @@ local Actor = require("obj/Actor")
 
 local Hero = Actor:extend()
 
-local EnergyPerTurn = 50
-local MaxHp = 11
-local Damage = 2
+local DefaultEnergyPerTurn = 50
+local DefaultMaxHp = 11
+local DefaultDamage = 2
 
 function Hero:init(name, currentLevel, xPos, yPos, hp)
 	hp = hp or MaxHp
-	Hero.super.init(self, "Hero", xPos, yPos, EnergyPerTurn, MaxHp, hp, Damage)
+	Hero.super.init(self, "Hero", xPos, yPos, DefaultEnergyPerTurn, DefaultMaxHp, hp, DefaultDamage)
 
 	self.currentLevel, self.name, self.action = currentLevel or "example", name or "test", nil
 	self.facing = "up"
