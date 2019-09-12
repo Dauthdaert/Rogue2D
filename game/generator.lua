@@ -13,10 +13,21 @@ function gen.generateMap(height, width)
 	local astray = require('lib/astray')
 
 	-- This maze generator can only generate uneven maps.
-	-- To get a 399x399 maze you need to Input
-	--local height, width = 400, 400
-	--	Astray:new(width/2-1, height/2-1, changeDirectionModifier (1-30), sparsenessModifier (25-70), deadEndRemovalModifier (70-99) ) | RoomGenerator:new(rooms, minWidth, maxWidth, minHeight, maxHeight)
-	local generator = astray.Astray:new(height/2-1, width/2-1, 30, 70, 50, astray.RoomGenerator:new(7, 2, 10, 2, 10) )
+	-- To get a 399x399 maze you need to Input (local height, width = 400, 400)
+	-- RoomGenerator:new(rooms, minWidth, maxWidth, minHeight, maxHeight)
+	local changeDirectionModifier = 30 --(1-30)
+	local sparsenessModifier = 70 --(25-70)
+	local deadEndRemovalModifier = 80 --(70-99)
+
+	local roomMinNumber = 10
+	local roomMinWidth = 2
+	local roomMinHeight = 2
+	local roomMaxNumber = 20
+	local roomMaxWidth = 10
+	local roomMaxHeight = 10
+	local roomGenerator = astray.RoomGenerator:new(love.math.random(roomMinNumber, roomMaxNumber), roomMinWidth, roomMaxWidth, roomMinHeight, roomMaxHeight)
+
+	local generator = astray.Astray:new(height/2-1, width/2-1, changeDirectionModifier, sparsenessModifier, deadEndRemovalModifier, roomGenerator)
 	local dungeon = generator:Generate()
 	local tiles = generator:CellToTiles(dungeon)
 	tiles = private.generateEntranceExit(tiles)
